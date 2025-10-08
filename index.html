@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exam Practice Generator (Simple Questions)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {--bg:#0b0f16;--panel:#111827;--ink:#e6edf3;--muted:#9ca3af;--line:#1f2937;--red:#f87171;--yellow:#fbbf24;--green:#34d399;--pink:#ec4899;--purple:#a855f7;--blue:#3b82f6;}
+    body {background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;}
+    .panel {background:var(--panel);border:1px solid var(--line);border-radius:.8rem;}
+    .btn {border:1px solid var(--line);background:#0f172a;padding:.55rem .9rem;border-radius:.7rem;}
+    .btn:hover {background:#1e293b;}
+    .box {min-height:6.5rem;line-height:1.55;outline:none;white-space:pre-wrap;border:1px solid var(--line);border-radius:.6rem;direction:ltr;text-align:left;}
+    .box[contenteditable="true"]:empty:before {content:'Type your 4-sentence answer here…';color:#64748b;}
+    mark{background:none;color:inherit;}
+    .hl-passive{background:rgba(248,113,113,.18);box-shadow:inset 0 -2px 0 0 var(--red)}
+    .hl-stop{background:rgba(251,191,36,.18);box-shadow:inset 0 -2px 0 0 var(--yellow)}
+    .hl-filler{background:rgba(236,72,153,.18);box-shadow:inset 0 -2px 0 0 var(--pink)}
+    .hl-basic{background:rgba(52,211,153,.18);box-shadow:inset 0 -2px 0 0 var(--green)}
+    .hl-filter{background:rgba(168,85,247,.18);box-shadow:inset 0 -2px 0 0 var(--purple)}
+    .hl-badstart{background:rgba(59,130,246,.18);box-shadow:inset 0 -2px 0 0 var(--blue)}
+  </style>
+</head>
+<body class="min-h-screen">
+  <header class="panel p-4 sticky top-0 z-10 flex flex-wrap gap-3 items-center justify-between">
+    <h1 class="text-lg font-semibold">Exam Practice Generator — Australian Curriculum v9</h1>
+    <div class="flex gap-2 items-center">
+      <label class="text-sm text-slate-300 ml-2">Subject</label>
+      <select id="subjectSel" class="btn text-sm">
+        <option value="science">Science</option>
+        <option value="history">History</option>
+        <option value="civics">Civics</option>
+        <option value="geography">Geography</option>
+      </select>
+      <button id="newQ" class="btn">🎲 Change Question</button>
+      <button id="clearAns" class="btn">🧹 Clear</button>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto p-4 space-y-6">
+    <section class="grid md:grid-cols-2 gap-4">
+      <div class="panel p-4">
+        <h2 class="text-base font-semibold mb-2">Junior Question (Y4–6)</h2>
+        <p id="juniorQ" class="text-slate-200"></p>
+      </div>
+      <div class="panel p-4">
+        <h2 class="text-base font-semibold mb-2">Middle Question (Y7–9)</h2>
+        <p id="middleQ" class="text-slate-200"></p>
+      </div>
+    </section>
+
+    <section class="grid md:grid-cols-2 gap-4">
+      <div class="panel p-4">
+        <h3 class="font-semibold mb-2">How to Answer (4 sentences)</h3>
+        <div id="structure" class="text-slate-300 text-sm leading-relaxed space-y-2"></div>
+      </div>
+      <div class="panel p-4">
+        <h3 class="font-semibold mb-2">Your Answer</h3>
+        <div id="answer" class="box p-3" contenteditable="true" spellcheck="true"></div>
+        <div class="flex flex-wrap gap-2 mt-3 text-xs items-center">
+          <span class="bg-slate-700 px-2 py-1 rounded">Words: <span id="wc">0</span></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="flex justify-end items-center gap-3">
+      <button id="copyBtn" class="btn">📋 Copy Answer</button>
+      <span id="copyMsg" class="text-sm text-slate-400"></span>
+    </section>
+
+    <section id="exampleBox" class="panel p-4">
+      <h3 class="font-semibold mb-2">Example Answer</h3>
+      <p id="exampleText" class="text-slate-300 text-sm leading-relaxed"></p>
+    </section>
+  </main>
+
+  <script>
+    const examples = {
+      science: "(Claim) Water is essential for life because every organism depends on it to survive. (Evidence) Plants use water during photosynthesis to make food. (Reasoning) This process supports the entire food chain by providing energy to animals and humans. (Conclude) Without clean water, no life on Earth could continue.",
+      history: "(Point) The First Fleet carried convicts and supplies from Britain to Australia in 1787. (Evidence) The journey took eight months and many people got sick. (Explain) This was the beginning of European settlement in Australia. (Link) It changed the lives of Aboriginal and Torres Strait Islander Peoples forever.",
+      civics: "(Point) Democracy is a system where citizens have a voice in decisions. (Evidence) People vote to choose leaders in elections. (Explain) This makes sure laws and decisions are fair. (Link) It also means governments must listen to their people.",
+      geography: "(Point) A map helps us understand the world around us. (Evidence) It shows land, water, and roads using symbols. (Explain) This allows people to plan journeys and study the Earth’s surface. (Link) Maps help humans connect places and make informed choices."
+    };
+
+    const questions = {
+      science: {
+        junior: ["Why is water important for life?","What are solids, liquids and gases?","How do plants grow?","Why do shadows change during the day?","What are some examples of forces that make things move?"],
+        middle: ["How does gravity affect motion?","Why is photosynthesis important?","What causes earthquakes?","How do simple circuits work?","Why is recycling important for the environment?"]
+      },
+      history: {
+        junior: ["Who were the First Fleet?","Why did people come to Australia?","What was life like for children in the past?","Why are historical artefacts important?","Who were some important explorers of Australia?"],
+        middle: ["What was life like in Ancient Egypt?","Why did the Roman Empire expand?","What caused World War I?","How did Federation change Australia?","Why do historians use primary sources?"]
+      },
+      civics: {
+        junior: ["What is a rule?","Why do we need laws?","Who makes the rules at school?","What does local government do?","Why is voting important?"],
+        middle: ["What is democracy?","How is a law made in Australia?","What is the Constitution?","Why are human rights important?","How does the government represent citizens?"]
+      },
+      geography: {
+        junior: ["What is a map?","Why are different places hot or cold?","Why is water important for living things?","What is a natural resource?","How do people change the environment?"],
+        middle: ["What causes different climates?","How do landforms like mountains form?","Why is sustainable farming important?","What are the effects of deforestation?","How does population growth affect cities?"]
+      }
+    };
+
+    const subjectSel = document.getElementById('subjectSel');
+    const jrQ = document.getElementById('juniorQ');
+    const mdQ = document.getElementById('middleQ');
+    const answerEl = document.getElementById('answer');
+    const wcEl = document.getElementById('wc');
+    const structure = document.getElementById('structure');
+    const exampleText = document.getElementById('exampleText');
+
+    function countWords(str){return(str.trim().match(/\b\w+\b/g)||[]).length;}
+
+    function updateQuestions(){
+      const subj = subjectSel.value;
+      const jbank = questions[subj].junior;
+      const mbank = questions[subj].middle;
+      jrQ.textContent = jbank[Math.floor(Math.random()*jbank.length)];
+      mdQ.textContent = mbank[Math.floor(Math.random()*mbank.length)];
+      if(subj==='science'){
+        structure.innerHTML = `<strong>Use CER(C):</strong><br>1️⃣ <b>Claim:</b> Make a clear statement answering the question.<br>2️⃣ <b>Evidence:</b> Give one fact or observation that supports your claim.<br>3️⃣ <b>Reasoning:</b> Explain why your evidence supports your claim.<br>4️⃣ <b>Conclude:</b> Summarise what this means overall.`;
+      } else {
+        structure.innerHTML = `<strong>Use PEEL:</strong><br>1️⃣ <b>Point:</b> Make a clear topic statement.<br>2️⃣ <b>Evidence:</b> Give a fact or example.<br>3️⃣ <b>Explain:</b> Describe why that fact is important.<br>4️⃣ <b>Link:</b> Connect it back to the main idea.`;
+      }
+      exampleText.textContent = examples[subj];
+      answerEl.textContent = '';
+      wcEl.textContent = '0';
+      answerEl.focus();
+    }
+
+    subjectSel.addEventListener('change', updateQuestions);
+    document.getElementById('newQ').addEventListener('click', updateQuestions);
+    document.getElementById('clearAns').addEventListener('click', ()=>{answerEl.textContent='';wcEl.textContent='0';answerEl.focus();});
+    answerEl.addEventListener('input', ()=>{wcEl.textContent = countWords(answerEl.textContent || '');});
+    document.getElementById('copyBtn').addEventListener('click', async()=>{
+      const text = answerEl.textContent || '';
+      try{await navigator.clipboard.writeText(text);const m=document.getElementById('copyMsg');m.textContent='Copied!';setTimeout(()=>m.textContent='',1200);}catch(e){alert('Copy failed');}
+    });
+
+    updateQuestions();
+  </script>
+</body>
+</html>
