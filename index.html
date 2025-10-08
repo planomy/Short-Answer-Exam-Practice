@@ -13,13 +13,6 @@
     .btn:hover {background:#1e293b;}
     .box {min-height:6.5rem;line-height:1.55;outline:none;white-space:pre-wrap;border:1px solid var(--line);border-radius:.6rem;direction:ltr;text-align:left;}
     .box[contenteditable="true"]:empty:before {content:'Type your 4-sentence answer here…';color:#64748b;}
-    mark{background:none;color:inherit;}
-    .hl-passive{background:rgba(248,113,113,.18);box-shadow:inset 0 -2px 0 0 var(--red)}
-    .hl-stop{background:rgba(251,191,36,.18);box-shadow:inset 0 -2px 0 0 var(--yellow)}
-    .hl-filler{background:rgba(236,72,153,.18);box-shadow:inset 0 -2px 0 0 var(--pink)}
-    .hl-basic{background:rgba(52,211,153,.18);box-shadow:inset 0 -2px 0 0 var(--green)}
-    .hl-filter{background:rgba(168,85,247,.18);box-shadow:inset 0 -2px 0 0 var(--purple)}
-    .hl-badstart{background:rgba(59,130,246,.18);box-shadow:inset 0 -2px 0 0 var(--blue)}
   </style>
 </head>
 <body class="min-h-screen">
@@ -85,20 +78,60 @@
 
     const questions = {
       science: {
-        junior: ["Why is water important for life?","What are solids, liquids and gases?","How do plants grow?","Why do shadows change during the day?","What are some examples of forces that make things move?"],
-        middle: ["How does gravity affect motion?","Why is photosynthesis important?","What causes earthquakes?","How do simple circuits work?","Why is recycling important for the environment?"]
+        junior: [
+          "Why is water important for life?","What are solids, liquids and gases?","How do plants grow?","Why do shadows change during the day?","What are some examples of forces that make things move?",
+          "What is the role of the Sun in our solar system?","How do magnets attract or repel?","Why do animals have adaptations?","How does temperature affect matter?","What are renewable and non-renewable resources?",
+          "What is evaporation?","How do we use electricity safely?","What is the water cycle?","How can we reduce waste?","Why do we need clean air?",
+          "Why do living things need food?","How can weather affect daily life?","What are some materials that float or sink?","What causes night and day?","Why do scientists do experiments?"
+        ],
+        middle: [
+          "How does gravity affect motion?","Why is photosynthesis important?","What causes earthquakes?","How do simple circuits work?","Why is recycling important for the environment?",
+          "What is global warming?","Why does sound travel differently through solids and gases?","How does friction help or hinder movement?","How do ecosystems stay balanced?","Why do we see different moon phases?",
+          "How do vaccines protect humans?","Why is biodiversity important?","What is chemical change?","How does energy transfer in food chains?","How can we measure speed?",
+          "Why does the Earth rotate?","How do levers make work easier?","Why is data collection important in science?","How can pollution be reduced?","What are some uses of solar power?"
+        ]
       },
       history: {
-        junior: ["Who were the First Fleet?","Why did people come to Australia?","What was life like for children in the past?","Why are historical artefacts important?","Who were some important explorers of Australia?"],
-        middle: ["What was life like in Ancient Egypt?","Why did the Roman Empire expand?","What caused World War I?","How did Federation change Australia?","Why do historians use primary sources?"]
+        junior: [
+          "Who were the First Fleet?","Why did people come to Australia?","What was life like for children in the past?","Why are historical artefacts important?","Who were some important explorers of Australia?",
+          "What was the Gold Rush?","How did Indigenous Australians live before colonisation?","Why was Captain Cook important?","Who were early settlers?","Why is ANZAC Day remembered?",
+          "What changes came with European settlement?","How did convicts contribute to society?","Why did people migrate to Australia?","How did technology change transport?","Who were famous bushrangers?",
+          "Why do we study history?","How was school different in the past?","Who built early towns and farms?","Why were penal colonies created?","How did Indigenous cultures share stories?"
+        ],
+        middle: [
+          "What was life like in Ancient Egypt?","Why did the Roman Empire expand?","What caused World War I?","How did Federation change Australia?","Why do historians use primary sources?",
+          "What was the Industrial Revolution?","Why did Europeans explore the world?","How did World War II affect Australia?","Why was the Berlin Wall built?","What role did women play in history?",
+          "Why did empires rise and fall?","How did democracy begin in Athens?","Why were pyramids built?","What was the Renaissance?","What caused the Great Depression?",
+          "How did technology change war?","What was colonisation?","Why do we remember historical events?","What was the Cold War?","Why was Federation significant?"
+        ]
       },
       civics: {
-        junior: ["What is a rule?","Why do we need laws?","Who makes the rules at school?","What does local government do?","Why is voting important?"],
-        middle: ["What is democracy?","How is a law made in Australia?","What is the Constitution?","Why are human rights important?","How does the government represent citizens?"]
+        junior: [
+          "What is a rule?","Why do we need laws?","Who makes the rules at school?","What does local government do?","Why is voting important?",
+          "Who is the Prime Minister?","Why do we have elections?","What are rights and responsibilities?","Who helps enforce laws?","What does fairness mean?",
+          "What are community groups?","How do we solve disagreements?","What is citizenship?","Why is teamwork important?","Who are police officers?",
+          "Why do people protest?","What makes a good leader?","Why do schools have councils?","What does respect mean?","How can students contribute to change?"
+        ],
+        middle: [
+          "What is democracy?","How is a law made in Australia?","What is the Constitution?","Why are human rights important?","How does the government represent citizens?",
+          "What are the levels of government?","What is the separation of powers?","How can young people participate in democracy?","Why is freedom of speech important?","What does the judiciary do?",
+          "Why do we have political parties?","What are local councils responsible for?","How does the media influence opinions?","Why is justice important?","What happens during elections?",
+          "What is citizenship?","Why do countries have constitutions?","What does the Governor-General do?","Why do laws change?","How can voting improve fairness?"
+        ]
       },
       geography: {
-        junior: ["What is a map?","Why are different places hot or cold?","Why is water important for living things?","What is a natural resource?","How do people change the environment?"],
-        middle: ["What causes different climates?","How do landforms like mountains form?","Why is sustainable farming important?","What are the effects of deforestation?","How does population growth affect cities?"]
+        junior: [
+          "What is a map?","Why are different places hot or cold?","Why is water important for living things?","What is a natural resource?","How do people change the environment?",
+          "What are landforms?","Why do people live near rivers?","What is the weather?","Why are seasons different around the world?","How do we care for our environment?",
+          "What is recycling?","Why are forests important?","How can maps help travel?","What is erosion?","Why do people build cities?",
+          "How do farms help communities?","Why are oceans important?","What is drought?","Why do people migrate?","What is climate change?"
+        ],
+        middle: [
+          "What causes different climates?","How do landforms like mountains form?","Why is sustainable farming important?","What are the effects of deforestation?","How does population growth affect cities?",
+          "Why is clean water important globally?","What is urbanisation?","How do natural disasters affect people?","Why is the Great Barrier Reef significant?","What is renewable energy?",
+          "How can countries reduce pollution?","Why are national parks important?","What causes desertification?","How does geography affect culture?","Why is transport infrastructure important?",
+          "How do humans adapt to extreme climates?","Why is global trade important?","What is overfishing?","How can cities be more sustainable?","Why are wetlands important?"
+        ]
       }
     };
 
